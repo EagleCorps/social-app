@@ -1,0 +1,32 @@
+.tabler-icon {
+  stroke-width: 1.25;
+}
+
+html {
+  scrollbar-gutter: stable both-edges;
+}
+
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #7f7f7f none;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 2px;
+  opacity: 0.5;
+  margin-right: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: none;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #7f7f7f;
+  border-radius: 16px;
+  border: 0px none #ffffff;
+  opacity: 0.5;
+}

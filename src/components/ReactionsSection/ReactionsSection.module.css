@@ -1,0 +1,12 @@
+.emojiPicker {
+  border: none !important;
+}
+
+.emojiChipLabel {
+  padding-left: calc(var(--chip-padding-xs) / 3);
+  padding-right: calc(var(--chip-padding-xs) / 3);
+}
+
+.emojiChipCheckIconWrapper {
+  display: none;
+}

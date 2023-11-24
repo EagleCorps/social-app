@@ -1,0 +1,28 @@
+.imageSection {
+  height: auto;
+}
+
+.commentSubmitButton {
+  &[data-disabled] {
+    background-color: rgba(0, 0, 0, 0);
+  }
+}
+
+.itemBullet {
+  margin-top: var(--mantine-spacing-md);
+}
+
+.item {
+  margin-top: 0;
+  &:before {
+    bottom: calc(var(--mantine-spacing-xl) * -1 + var(--mantine-spacing-md));
+  }
+}
+
+.phantomTimelineItem {
+  display: none;
+}
+
+.phantomTimelineItemBullet {
+  display: none;
+}

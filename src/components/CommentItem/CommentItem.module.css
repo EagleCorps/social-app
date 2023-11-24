@@ -1,0 +1,25 @@
+.commentSubmitButton {
+  &[data-disabled] {
+    background-color: rgba(0, 0, 0, 0);
+  }
+}
+
+.itemBulletInner {
+  margin-top: var(--mantine-spacing-md);
+}
+
+.itemInner {
+  margin-top: 0;
+  &:before {
+    bottom: calc(var(--mantine-spacing-xl) * -1 - var(--mantine-spacing-md));
+    margin-bottom: 2rem;
+  }
+}
+
+.phantomCommentTimelineItemBullet {
+  display: none;
+}
+
+.phantomCommentTimelineItem {
+  display: none;
+}

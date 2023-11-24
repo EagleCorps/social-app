@@ -1,0 +1,5 @@
+.root {
+  &[data-size="lg-padded"] {
+    padding: calc(0.375rem * var(--mantine-scale));
+  }
+}

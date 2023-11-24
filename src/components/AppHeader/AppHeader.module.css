@@ -1,0 +1,16 @@
+.header {
+  margin-bottom: var(--mantine-spacing-lg);
+  padding: var(--mantine-spacing-md);
+}
+
+.openNavigationPanelButton {
+  &[hidden] {
+    visibility: hidden;
+  }
+}
+
+.openSettingsPanelButton {
+  &[hidden] {
+    visibility: hidden;
+  }
+}

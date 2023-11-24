@@ -1,0 +1,7 @@
+.aside {
+  padding: var(--mantine-spacing-md);
+}
+
+.divider {
+  margin: var(--mantine-spacing-md) -1rem;
+}
