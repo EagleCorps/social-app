@@ -8,7 +8,7 @@ const NameSettingsSection_UserFragment = graphql(`
 `);
 
 const NameSettingsSection_UserQuery = graphql(`
-  query NameSettingsSection_UserQuery($userId: Uuid!) {
+  query NameSettingsSection_UserQuery($userId: uuid!) {
     usersByPk(id: $userId) {
       id
       ...NameSettingsSection_UserFragment
@@ -17,7 +17,7 @@ const NameSettingsSection_UserQuery = graphql(`
 `);
 
 const UpdateUserName_Mutation = graphql(`
-  mutation UpdateUserName_Mutation($userId: Uuid!, $name: String!) {
+  mutation UpdateUserName_Mutation($userId: uuid!, $name: String!) {
     updateUsersByPk(pkColumns: { id: $userId }, _set: { name: $name }) {
       id
       ...NameSettingsSection_UserFragment

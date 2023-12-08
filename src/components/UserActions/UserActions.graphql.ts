@@ -31,7 +31,7 @@ const UserActions_UserUserRelationshipStateFragment = graphql(`
 `);
 
 const UserActions_UserQuery = graphql(`
-  query UserActions_UserQuery($sourceUserId: Uuid!, $targetUserId: Uuid!) {
+  query UserActions_UserQuery($sourceUserId: uuid!, $targetUserId: uuid!) {
     sourceUser: usersByPk(id: $sourceUserId) {
       id
       userSourceUserRelationships(
@@ -53,8 +53,8 @@ const UserActions_UserQuery = graphql(`
 
 const CreateUserUserRelationship_Mutation = graphql(`
   mutation CreateUserUserRelationship_Mutation(
-    $sourceUserId: Uuid!
-    $targetUserId: Uuid!
+    $sourceUserId: uuid!
+    $targetUserId: uuid!
     $type: UserUserRelationshipTypesEnum!
   ) {
     insertUserUserRelationshipsOne(
@@ -65,13 +65,13 @@ const CreateUserUserRelationship_Mutation = graphql(`
         states: {
           data: { type: IS_ACTIVE }
           onConflict: {
-            constraint: userUserRelationshipStatesTypeUserUserRelationshipIKey
+            constraint: user_user_relationship_states_type_user_user_relationship_i_key
             updateColumns: [updatedAt]
           }
         }
       }
       onConflict: {
-        constraint: userUserRelationshipsSourceUserIdTargetUserIdTypeKey
+        constraint: user_user_relationships_source_user_id_target_user_id_type_key
         updateColumns: [updatedAt]
       }
     ) {
@@ -81,7 +81,7 @@ const CreateUserUserRelationship_Mutation = graphql(`
 `);
 
 const DeleteUserUserRelationship_Mutation = graphql(`
-  mutation DeleteUserUserRelationship_Mutation($relationshipId: Uuid!) {
+  mutation DeleteUserUserRelationship_Mutation($relationshipId: uuid!) {
     deleteUserUserRelationshipsByPk(id: $relationshipId) {
       id
     }
@@ -90,13 +90,13 @@ const DeleteUserUserRelationship_Mutation = graphql(`
 
 const CreateUserUserRelationshipState_Mutation = graphql(`
   mutation CreateUserUserRelationshipState_Mutation(
-    $relationshipId: Uuid!
+    $relationshipId: uuid!
     $type: UserUserRelationshipStateTypesEnum!
   ) {
     insertUserUserRelationshipStatesOne(
       object: { type: $type, userUserRelationshipId: $relationshipId }
       onConflict: {
-        constraint: userUserRelationshipStatesTypeUserUserRelationshipIKey
+        constraint: user_user_relationship_states_type_user_user_relationship_i_key
         updateColumns: [updatedAt]
       }
     ) {
@@ -108,7 +108,7 @@ const CreateUserUserRelationshipState_Mutation = graphql(`
 
 const DeleteUserUserRelationshipState_Mutation = graphql(`
   mutation DeleteUserUserRelationshipState_Mutation(
-    $relationshipStateId: Uuid!
+    $relationshipStateId: uuid!
   ) {
     deleteUserUserRelationshipStatesByPk(id: $relationshipStateId) {
       id

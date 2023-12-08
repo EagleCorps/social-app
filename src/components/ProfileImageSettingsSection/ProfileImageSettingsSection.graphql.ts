@@ -11,7 +11,7 @@ const ProfileImageSettingsSection_UserFragment = graphql(`
 `);
 
 const ProfileImageSettingsSection_UserQuery = graphql(`
-  query ProfileImageSettingsSection_UserQuery($userId: Uuid!) {
+  query ProfileImageSettingsSection_UserQuery($userId: uuid!) {
     usersByPk(id: $userId) {
       id
       ...ProfileImageSettingsSection_UserFragment
@@ -20,7 +20,7 @@ const ProfileImageSettingsSection_UserQuery = graphql(`
 `);
 
 const SetProfileImage_Mutation = graphql(`
-  mutation SetProfileImage_Mutation($userId: Uuid!, $profileImageId: Uuid!) {
+  mutation SetProfileImage_Mutation($userId: uuid!, $profileImageId: uuid!) {
     updateUsersByPk(
       pkColumns: { id: $userId }
       _set: { profileImageId: $profileImageId }

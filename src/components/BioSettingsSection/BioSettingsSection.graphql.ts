@@ -8,7 +8,7 @@ const BioSettingsSection_UserFragment = graphql(`
 `);
 
 const BioSettingsSection_UserQuery = graphql(`
-  query BioSettingsSection_UserQuery($userId: Uuid!) {
+  query BioSettingsSection_UserQuery($userId: uuid!) {
     usersByPk(id: $userId) {
       id
       ...BioSettingsSection_UserFragment
@@ -17,7 +17,7 @@ const BioSettingsSection_UserQuery = graphql(`
 `);
 
 const UpdateUserBio_Mutation = graphql(`
-  mutation UpdateUserBio_Mutation($userId: Uuid!, $bio: String!) {
+  mutation UpdateUserBio_Mutation($userId: uuid!, $bio: String!) {
     updateUsersByPk(pkColumns: { id: $userId }, _set: { bio: $bio }) {
       id
       ...BioSettingsSection_UserFragment

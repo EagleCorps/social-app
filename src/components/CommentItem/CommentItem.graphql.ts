@@ -25,7 +25,7 @@ const CommentItem_CommentFragment = graphql(`
 `);
 
 const CommentItem_Query = graphql(`
-  query CommentItem_Query($commentId: Uuid!) {
+  query CommentItem_Query($commentId: uuid!) {
     comment: commentsByPk(id: $commentId) {
       id
       ...CommentItem_CommentFragment
@@ -36,9 +36,9 @@ const CommentItem_Query = graphql(`
 const CreateReplyComment_Mutation = graphql(`
   mutation CreateReplyComment_Mutation(
     $body: String!
-    $authorId: Uuid!
-    $postId: Uuid!
-    $objectCommentId: Uuid
+    $authorId: uuid!
+    $postId: uuid!
+    $objectCommentId: uuid
   ) {
     insertCommentsOne(
       object: {
@@ -56,7 +56,7 @@ const CreateReplyComment_Mutation = graphql(`
 
 const SetCommentIsArchived_Mutation = graphql(`
   mutation SetCommentIsArchived_Mutation(
-    $commentId: Uuid!
+    $commentId: uuid!
     $isArchived: Boolean!
   ) {
     updateCommentsByPk(
@@ -71,14 +71,14 @@ const SetCommentIsArchived_Mutation = graphql(`
 
 const AddCommentReaction_Mutation = graphql(`
   mutation AddCommentReaction_Mutation(
-    $commentId: Uuid!
-    $userId: Uuid!
+    $commentId: uuid!
+    $userId: uuid!
     $type: String!
   ) {
     insertCommentReactionsOne(
       object: { commentId: $commentId, reactorId: $userId, type: $type }
       onConflict: {
-        constraint: commentReactionsCommentIdReactorIdTypeKey
+        constraint: comment_reactions_comment_id_reactor_id_type_key
         updateColumns: [updatedAt]
       }
     ) {
@@ -94,8 +94,8 @@ const AddCommentReaction_Mutation = graphql(`
 
 const DeleteCommentReaction_Mutation = graphql(`
   mutation DeleteCommentReaction_Mutation(
-    $commentId: Uuid!
-    $userId: Uuid!
+    $commentId: uuid!
+    $userId: uuid!
     $type: String!
   ) {
     deleteCommentReactions(

@@ -1,7 +1,7 @@
 import { graphql } from "@/graphql";
 
 const UserProfile_Query = graphql(`
-  query UserProfile_Query($userId: Uuid!, $profileUserId: Uuid!) {
+  query UserProfile_Query($userId: uuid!, $profileUserId: uuid!) {
     usersByPk(id: $profileUserId) {
       id
       name

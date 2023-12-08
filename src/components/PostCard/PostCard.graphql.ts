@@ -52,7 +52,7 @@ const PostCard_CommentFragment = graphql(`
 `);
 
 const PostCard_PostQuery = graphql(`
-  query PostCard_PostQuery($postId: Uuid!) {
+  query PostCard_PostQuery($postId: uuid!) {
     postsByPk(id: $postId) {
       id
       ...PostCard_PostFragment
@@ -61,7 +61,7 @@ const PostCard_PostQuery = graphql(`
 `);
 
 const SetPostIsArchived_Mutation = graphql(`
-  mutation SetPostIsArchived_Mutation($postId: Uuid!, $isArchived: Boolean!) {
+  mutation SetPostIsArchived_Mutation($postId: uuid!, $isArchived: Boolean!) {
     updatePostsByPk(
       pkColumns: { id: $postId }
       _set: { isArchived: $isArchived }
@@ -74,14 +74,14 @@ const SetPostIsArchived_Mutation = graphql(`
 
 const AddPostReaction_Mutation = graphql(`
   mutation AddPostReaction_Mutation(
-    $postId: Uuid!
-    $userId: Uuid!
+    $postId: uuid!
+    $userId: uuid!
     $type: String!
   ) {
     insertPostReactionsOne(
       object: { postId: $postId, reactorId: $userId, type: $type }
       onConflict: {
-        constraint: postReactionsPostIdReactorIdTypeKey
+        constraint: post_reactions_post_id_reactor_id_type_key
         updateColumns: [updatedAt]
       }
     ) {
@@ -97,8 +97,8 @@ const AddPostReaction_Mutation = graphql(`
 
 const DeletePostReaction_Mutation = graphql(`
   mutation DeletePostReaction_Mutation(
-    $postId: Uuid!
-    $userId: Uuid!
+    $postId: uuid!
+    $userId: uuid!
     $type: String!
   ) {
     deletePostReactions(
@@ -116,9 +116,9 @@ const DeletePostReaction_Mutation = graphql(`
 const CreateRootComment_Mutation = graphql(`
   mutation CreateRootComment_Mutation(
     $body: String!
-    $authorId: Uuid!
-    $postId: Uuid!
-    $objectCommentId: Uuid
+    $authorId: uuid!
+    $postId: uuid!
+    $objectCommentId: uuid
   ) {
     insertCommentsOne(
       object: {

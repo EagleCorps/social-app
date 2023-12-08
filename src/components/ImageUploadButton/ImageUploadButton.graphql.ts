@@ -12,7 +12,7 @@ const ImageUploadButton_ImageFragment = graphql(`
 
 const CreateImage_Mutation = graphql(`
   mutation CreateImage_Mutation(
-    $uploaderId: Uuid!
+    $uploaderId: uuid!
     $url: String!
     $altText: String!
     $height: Int

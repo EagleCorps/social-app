@@ -9,7 +9,7 @@ const PostComposer_PostFragment = graphql(`
 `);
 
 const CreatePost_Mutation = graphql(`
-  mutation CreatePost_Mutation($body: String!, $authorId: Uuid!) {
+  mutation CreatePost_Mutation($body: String!, $authorId: uuid!) {
     insertPostsOne(object: { body: $body, authorId: $authorId }) {
       id
       ...PostComposer_PostFragment
@@ -18,7 +18,7 @@ const CreatePost_Mutation = graphql(`
 `);
 
 const AddImageToPost_Mutation = graphql(`
-  mutation AddImageToPost_Mutation($postId: Uuid!, $imageId: Uuid!) {
+  mutation AddImageToPost_Mutation($postId: uuid!, $imageId: uuid!) {
     insertPostImageRelationshipsOne(
       object: { postId: $postId, imageId: $imageId }
     ) {
