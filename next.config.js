@@ -14,6 +14,15 @@ const pathname = `/${
   (hasPort ? hostAndPortAndPath?.[1] : hostAndPortAndPath?.[1]) ?? ""
 }/**`;
 
+const remotePatterns = [
+  {
+    protocol,
+    hostname,
+    port,
+    pathname,
+  },
+];
+
 module.exports = withBundleAnalyzer({
   reactStrictMode: false,
   eslint: {
@@ -23,13 +32,6 @@ module.exports = withBundleAnalyzer({
     optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
   },
   images: {
-    remotePatterns: [
-      {
-        protocol,
-        hostname,
-        port,
-        pathname,
-      },
-    ],
+    remotePatterns,
   },
 });

@@ -11,7 +11,6 @@ import {
 import { useId } from "@mantine/hooks";
 import Uppy from "@uppy/core";
 import Dashboard from "@uppy/dashboard";
-import Compressor from "@uppy/compressor";
 import ImageEditor from "@uppy/image-editor";
 import Transloadit from "@uppy/transloadit";
 import Tus from "@uppy/tus";
@@ -81,8 +80,7 @@ const ImageUploadButton = forwardRef<HTMLDivElement, ImageUploadButtonProps>(
           proudlyDisplayPoweredByUppy: false,
           autoOpenFileEditor: true,
         })
-        .use(ImageEditor, { target: Dashboard })
-        .use(Compressor);
+        .use(ImageEditor, { target: Dashboard });
 
       if (process.env.NODE_ENV === "development") {
         newUppy
@@ -130,8 +128,8 @@ const ImageUploadButton = forwardRef<HTMLDivElement, ImageUploadButtonProps>(
             waitForEncoding: true,
           })
           .on("transloadit:complete", async ({ results }) => {
-            const uploadUrl = results?.compress_image[0]?.ssl_url;
-            const uploadName = results?.compress_image[0]?.original_name;
+            const uploadUrl = results?.finished[0]?.ssl_url;
+            const uploadName = results?.finished[0]?.original_name;
 
             const { naturalHeight: height, naturalWidth: width } =
               await getImageMetadata(uploadUrl);
