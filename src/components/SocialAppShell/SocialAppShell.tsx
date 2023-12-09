@@ -2,12 +2,12 @@
 
 import { Suspense } from "react";
 import { AppShell, Container, Loader } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useElementSize } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
+import { useBackgroundQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 
 import { AppHeader, NavigationPanel, SettingsPanel } from "@/components";
 import { usePageTitle } from "@/utils";
-import { useBackgroundQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 import { SocialAppShell_Query } from "./SocialAppShell.graphql";
 
 interface AppShellProps {
@@ -19,6 +19,7 @@ const SocialAppShell: React.FC<AppShellProps> = ({ children }) => {
     useDisclosure(true);
   const [settingsPanelIsOpen, { toggle: toggleSettingsPanelIsOpen }] =
     useDisclosure(true);
+  const { ref: appHeaderRef, height: appHeaderHeight } = useElementSize();
 
   const {
     data: {
@@ -59,6 +60,7 @@ const SocialAppShell: React.FC<AppShellProps> = ({ children }) => {
           toggleSettingsPanelIsOpen,
           pageTitle,
         }}
+        ref={appHeaderRef}
       />
       <NavigationPanel
         {...{
@@ -71,14 +73,13 @@ const SocialAppShell: React.FC<AppShellProps> = ({ children }) => {
           {...{
             userId,
             toggleSettingsPanelIsOpen,
+            appHeaderHeight,
           }}
         />
       </Suspense>
       <Suspense fallback={<Loader />}>
-        <AppShell.Main h="100vh">
-          <Container size="40rem" h="100%">
-            {children}
-          </Container>
+        <AppShell.Main>
+          <Container size="40rem">{children}</Container>
         </AppShell.Main>
       </Suspense>
     </AppShell>

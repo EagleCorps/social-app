@@ -5,7 +5,6 @@ export * from "./ColorSchemeToggle";
 export * from "./SettingsPanel";
 export * from "./AppHeader";
 export * from "./NavigationPanel";
-export * from "./AppFooter";
 export * from "./SettingsTabsList";
 export * from "./AppTitle";
 export * from "./ImageUploadButton";

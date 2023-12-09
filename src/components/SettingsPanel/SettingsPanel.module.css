@@ -2,6 +2,10 @@
   padding: var(--mantine-spacing-md);
 }
 
-.divider {
-  margin: var(--mantine-spacing-md) -1rem;
+.dividerTop {
+  margin: var(--mantine-spacing-md) calc(-1 * var(--mantine-spacing-md)) 0;
+}
+
+.dividerBottom {
+  margin: 0 calc(-1 * var(--mantine-spacing-md)) var(--mantine-spacing-md);
 }
