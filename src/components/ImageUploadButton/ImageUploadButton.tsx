@@ -113,13 +113,14 @@ const ImageUploadButton = forwardRef<HTMLDivElement, ImageUploadButtonProps>(
           })
           .on("complete", async ({ successful }) => {
             const images = successful?.map(
-              ({ uploadURL, name, meta: { description } }) => ({
+              ({
+                uploadURL,
+                name: originalName,
+                meta: { name, description },
+              }) => ({
                 url: uploadURL,
-                name,
-                description:
-                  ((description as string) ?? "").length > 0
-                    ? (description as string)
-                    : name,
+                name: name || originalName,
+                description: (description as string) || name,
               }),
             );
 
@@ -137,13 +138,14 @@ const ImageUploadButton = forwardRef<HTMLDivElement, ImageUploadButtonProps>(
               },
             },
             waitForEncoding: true,
+            waitForMetadata: true,
           })
           .on("transloadit:complete", async ({ results: { finished } }) => {
             const images = finished?.map(
-              ({ ssl_url, meta: { name, description } }) => ({
+              ({ ssl_url, original_name, meta: { name, description } }) => ({
                 url: ssl_url,
-                name,
-                description: description ?? name,
+                name: name || original_name,
+                description: description || name || original_name,
               }),
             );
 
