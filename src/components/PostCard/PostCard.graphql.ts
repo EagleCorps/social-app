@@ -1,11 +1,5 @@
 import { graphql } from "@/graphql";
 
-const PostCard_UserFragment = graphql(`
-  fragment PostCard_UserFragment on Users {
-    id
-  }
-`);
-
 const PostCard_PostFragment = graphql(`
   fragment PostCard_PostFragment on Posts {
     id
@@ -37,8 +31,11 @@ const PostCard_PostFragment = graphql(`
         url
         width
         height
-        altText
+        name
+        blurDataUrl
         description
+        createdAt
+        updatedAt
       }
     }
   }
@@ -135,7 +132,6 @@ const CreateRootComment_Mutation = graphql(`
 `);
 
 export {
-  PostCard_UserFragment,
   PostCard_PostFragment,
   PostCard_CommentFragment,
   PostCard_PostQuery,

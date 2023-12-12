@@ -15,17 +15,32 @@ import {
   Group,
   Title,
   Stack,
-  NavLink,
+  NavLink as MantineNavLink,
   Tooltip,
 } from "@mantine/core";
-
-import classes from "./NavigationPanel.module.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+import classes from "./NavigationPanel.module.css";
 
 interface NavigationPanelProps {
   toggleNavigationPanelIsOpen: () => void;
 }
+
+const NavLink = ({ currentPath, targetPath, label, icon }) => {
+  const isCurrent = currentPath.startsWith(targetPath);
+
+  return (
+    <MantineNavLink
+      component={Link}
+      href={targetPath}
+      label={label}
+      variant="filled"
+      active={isCurrent}
+      leftSection={icon}
+    />
+  );
+};
 
 const NavigationPanel: React.FC<NavigationPanelProps> = ({
   toggleNavigationPanelIsOpen,
@@ -52,21 +67,16 @@ const NavigationPanel: React.FC<NavigationPanelProps> = ({
       <Stack h="100%" justify="space-between" mt="-1rem">
         <Stack h="100%" ml="-1rem" mr="-1rem" gap={0}>
           <NavLink
-            component={Link}
-            href="/posts"
+            currentPath={pathname}
+            targetPath="/posts"
             label="Feed"
-            variant="filled"
-            active={pathname === "/posts"}
-            leftSection={<IconListDetails />}
+            icon={<IconListDetails />}
           />
-
           <NavLink
-            component={Link}
-            href="/users"
+            currentPath={pathname}
+            targetPath="/users"
             label="People"
-            variant="filled"
-            active={pathname.startsWith("/users")}
-            leftSection={<IconUsersGroup />}
+            icon={<IconUsersGroup />}
           />
         </Stack>
 

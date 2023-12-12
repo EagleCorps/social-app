@@ -14,6 +14,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { IconChevronRightPipe } from "@tabler/icons-react";
+import { useElementSize } from "@mantine/hooks";
 
 import {
   ColorSchemeToggle,
@@ -24,7 +25,6 @@ import {
 } from "@/components";
 
 import classes from "./SettingsPanel.module.css";
-import { useElementSize } from "@mantine/hooks";
 
 interface SettingsPanelProps {
   appHeaderHeight: number;

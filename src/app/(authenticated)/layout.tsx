@@ -5,9 +5,9 @@ import { useSession } from "next-auth/react";
 import { RedirectType, redirect, usePathname } from "next/navigation";
 import { Center, Loader } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
+import { nprogress } from "@mantine/nprogress";
 
 import { SocialAppShell } from "@/components";
-import { nprogress } from "@mantine/nprogress";
 
 export default function AuthenticatedLayout({ children }: { children: any }) {
   const { data: session, status } = useSession();

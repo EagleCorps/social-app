@@ -19,6 +19,7 @@ import { isNotEmpty, useForm } from "@mantine/form";
 import { IconX } from "@tabler/icons-react";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
+import { nprogress } from "@mantine/nprogress";
 
 import {
   ConfirmationModal,
@@ -32,7 +33,6 @@ import {
   CreatePost_Mutation,
 } from "./PostComposer.graphql";
 import classes from "./PostComposer.module.css";
-import { nprogress } from "@mantine/nprogress";
 
 interface PostComposerProps {}
 
@@ -94,7 +94,7 @@ const PostComposer: React.FC<PostComposerProps> = () => {
 
   useEffect(() => {
     nprogress.complete();
-  }, []);
+  }, [userId]);
 
   return (
     <form onSubmit={handlePostSubmit} style={{ height: "100%" }}>

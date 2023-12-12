@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { Center, Loader, Space, Stack } from "@mantine/core";
+import { Center, Loader, Skeleton, Space, Stack } from "@mantine/core";
 
 import { PostCard } from "@/components";
 
@@ -18,7 +18,7 @@ const PostsList: React.FC<PostsListProps> = ({
 }) => (
   <Stack>
     {postIds.map((id) => (
-      <Suspense key={id} fallback={<Loader />}>
+      <Suspense key={id} fallback={<Skeleton h="30em" w="100%" />}>
         <PostCard postId={id} refetch={refetch} />
       </Suspense>
     ))}

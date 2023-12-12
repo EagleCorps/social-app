@@ -29,7 +29,7 @@ const UserAvatar = forwardRef<HTMLDivElement, UserAvatarProps>(
         ref={ref}
         src={profileImage?.url ?? image ?? ""}
         classNames={{ image: classes.profileImageClass }}
-        alt={profileImage?.altText ?? ""}
+        alt={profileImage?.description ?? ""}
         size={size}
       >
         <IconUser />

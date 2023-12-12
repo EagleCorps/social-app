@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { AppShell, Container, Loader } from "@mantine/core";
+import { AppShell, Container, Loader, Skeleton } from "@mantine/core";
 import { useDisclosure, useElementSize } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
 import { useBackgroundQuery } from "@apollo/experimental-nextjs-app-support/ssr";
@@ -77,11 +77,14 @@ const SocialAppShell: React.FC<AppShellProps> = ({ children }) => {
           }}
         />
       </Suspense>
-      <Suspense fallback={<Loader />}>
-        <AppShell.Main>
-          <Container size="40rem">{children}</Container>
-        </AppShell.Main>
-      </Suspense>
+
+      <AppShell.Main>
+        <Container size="40rem">
+          <Suspense fallback={<Skeleton h="100%" w="100%" />}>
+            {children}
+          </Suspense>
+        </Container>
+      </AppShell.Main>
     </AppShell>
   );
 };

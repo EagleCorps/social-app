@@ -1,6 +1,13 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import {
   ActionIcon,
   Card,
@@ -16,7 +23,7 @@ import {
 } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { useDisclosure, useElementSize } from "@mantine/hooks";
-import { useFragment } from "@apollo/experimental-nextjs-app-support/ssr";
+import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { IconCheck, IconReceiptRefund, IconX } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
@@ -33,7 +40,6 @@ import {
 
 import {
   PostCard_PostQuery,
-  PostCard_PostFragment,
   SetPostIsArchived_Mutation,
   AddPostReaction_Mutation,
   DeletePostReaction_Mutation,
@@ -41,6 +47,7 @@ import {
 } from "./PostCard.graphql";
 import classes from "./PostCard.module.css";
 import { getRelativeTime } from "@/utils";
+import { nprogress } from "@mantine/nprogress";
 
 interface PostCardProps {
   postId: string;
@@ -48,6 +55,7 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ postId, refetch = () => {} }) => {
+  const [isPending, startTransition] = useTransition();
   const [
     archiveConfirmationModalIsOpen,
     {
@@ -67,27 +75,32 @@ const PostCard: React.FC<PostCardProps> = ({ postId, refetch = () => {} }) => {
 
   const {
     data: {
-      body,
-      isArchived,
-      authorId,
-      createdAt,
-      updatedAt,
-      postReactions,
-      comments,
-      postImageRelationships,
+      postsByPk: {
+        body,
+        isArchived,
+        authorId,
+        createdAt,
+        updatedAt,
+        postReactions,
+        comments,
+        postImageRelationships,
+      },
     },
-  } = useFragment({
-    fragment: PostCard_PostFragment,
-    fragmentName: "PostCard_PostFragment",
-    from: {
-      __typename: "Posts",
-      id: postId,
-    },
-  });
+  } = useSuspenseQuery(PostCard_PostQuery, { variables: { postId } });
 
   const [, { refetch: refetchPost }] = useLazyQuery(PostCard_PostQuery, {
     variables: { postId },
   });
+
+  useEffect(() => {
+    startTransition(() => {
+      refetchPost();
+    });
+  }, []);
+
+  useEffect(() => {
+    isPending ? nprogress.start() : nprogress.complete();
+  }, [isPending]);
 
   const [setPostIsArchived] = useMutation(SetPostIsArchived_Mutation, {
     onCompleted: () => refetchPost(),
@@ -165,20 +178,28 @@ const PostCard: React.FC<PostCardProps> = ({ postId, refetch = () => {} }) => {
       <Card shadow="xs" padding="lg" radius="md" withBorder ref={cardRef}>
         {firstImage ? (
           <Card.Section classNames={{ section: classes.imageSection }}>
-            <Image
-              src={firstImage?.url?.replace(
-                process.env.NEXT_PUBLIC_CLIENT_TUS_URL,
-                process.env.NEXT_PUBLIC_SERVER_TUS_URL,
-              )}
-              alt={firstImage?.altText}
-              h="auto"
-              mah={cardWidth}
-              fit="contain"
-              component={NextImage}
-              width={firstImage?.width}
-              height={firstImage.height}
-              priority
-            />
+            <Tooltip
+              label={firstImage?.description}
+              position="bottom"
+              withArrow
+            >
+              <Image
+                src={firstImage?.url?.replace(
+                  process.env.NEXT_PUBLIC_CLIENT_TUS_URL,
+                  process.env.NEXT_PUBLIC_SERVER_TUS_URL,
+                )}
+                alt={firstImage?.description ?? ""}
+                h="auto"
+                mah={cardWidth}
+                fit="contain"
+                component={NextImage}
+                width={firstImage?.width}
+                height={firstImage?.height}
+                placeholder={firstImage?.blurDataUrl ? "blur" : undefined}
+                blurDataURL={firstImage?.blurDataUrl}
+                priority
+              />
+            </Tooltip>
           </Card.Section>
         ) : (
           <></>

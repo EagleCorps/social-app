@@ -7,7 +7,13 @@ const UserAvatar_UserFragment = graphql(`
     profileImage {
       id
       url
-      altText
+      width
+      height
+      name
+      blurDataUrl
+      description
+      createdAt
+      updatedAt
     }
   }
 `);

@@ -7,7 +7,6 @@ import {
   Affix,
   Divider,
   Group,
-  ScrollArea,
   Space,
   Stack,
   Title,
@@ -17,6 +16,7 @@ import { IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
 import { skipToken, useLazyQuery } from "@apollo/client";
 import { useSession } from "next-auth/react";
+import { nprogress } from "@mantine/nprogress";
 
 import {
   UserActions,
@@ -26,17 +26,12 @@ import {
 } from "@/components";
 
 import { UserProfile_Query } from "./UserProfile.graphql";
-import { useElementSize } from "@mantine/hooks";
-import { nprogress } from "@mantine/nprogress";
 
 interface UserProfileProps {
   profileUserId: string;
 }
 
 const UserProfile: React.FC<UserProfileProps> = ({ profileUserId }) => {
-  const { ref: headerRef, height: headerHeight } = useElementSize();
-  const { ref: titleRef, height: titleHeight } = useElementSize();
-
   const {
     data: {
       user: { id: userId },
@@ -75,7 +70,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ profileUserId }) => {
 
   return (
     <Stack h="100%">
-      <Stack ref={headerRef}>
+      <Stack>
         <Group justify="space-between">
           <UserSummary userId={profileUserId} />
           <UserActions targetUserId={profileUserId} />
@@ -88,9 +83,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ profileUserId }) => {
         <Divider />
       </Stack>
 
-      <Title order={2} ref={titleRef}>
-        Posts
-      </Title>
+      <Title order={2}>Posts</Title>
 
       <PostsList
         postIds={posts.map(({ id }) => id)}

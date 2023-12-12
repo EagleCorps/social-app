@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import {
   ActionIcon,
   Badge,
@@ -10,13 +10,12 @@ import {
   Stack,
   Tooltip,
 } from "@mantine/core";
-import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
+import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 import {
   IconArrowBackUp,
   IconBan,
   IconCheck,
   IconDotsVertical,
-  IconUser,
   IconUserHeart,
   IconUserPlus,
   IconUserQuestion,
@@ -25,7 +24,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
-import { useMutation } from "@apollo/client";
+import { skipToken, useLazyQuery, useMutation } from "@apollo/client";
 import { useSession } from "next-auth/react";
 
 import {
@@ -43,6 +42,7 @@ import {
   DeleteUserUserRelationshipState_Mutation,
 } from "./UserActions.graphql";
 import classes from "./UserActions.module.css";
+import { nprogress } from "@mantine/nprogress";
 
 interface UserActionsProps {
   targetUserId: string;
@@ -62,14 +62,14 @@ type RelationshipsMap = {
       UserActions_UserUserRelationshipFragmentFragment,
       "type"
     > &
-      RelationshipStatesMap;
+    RelationshipStatesMap;
   };
   target: {
     [key in UserUserRelationshipTypesEnum]?: Omit<
       UserActions_UserUserRelationshipFragmentFragment,
       "type"
     > &
-      RelationshipStatesMap;
+    RelationshipStatesMap;
   };
 };
 
@@ -77,6 +77,7 @@ const UserActions: React.FC<UserActionsProps> = ({
   targetUserId,
   parentRefetch,
 }) => {
+  const [isPending, startTransition] = useTransition();
   const [
     sourceFollowModalIsOpen,
     { open: openSourceFollowModal, close: closeSourceFollowModal },
@@ -99,24 +100,47 @@ const UserActions: React.FC<UserActionsProps> = ({
   const {
     data: {
       sourceUser: {
-        id: sourceUserId = "",
-        userSourceUserRelationships: sourceRelationshipsData = [],
-        userTargetUserRelationships: targetRelationshipsData = [],
-      } = {},
-    } = {},
-    refetch: sourceUserRefetch,
-  } = useQuery(UserActions_UserQuery, {
-    variables: {
-      sourceUserId: currentUserId,
-      targetUserId,
+        id: sourceUserId,
+        userSourceUserRelationships: sourceRelationshipsData,
+        userTargetUserRelationships: targetRelationshipsData,
+      },
     },
-    skip: !targetUserId,
-  });
+  } = useSuspenseQuery(
+    UserActions_UserQuery,
+    currentUserId && targetUserId
+      ? {
+        variables: {
+          sourceUserId: currentUserId,
+          targetUserId,
+        },
+      }
+      : skipToken,
+  );
+
+  const [, { refetch: refetchRelationships }] = useLazyQuery(
+    UserActions_UserQuery,
+    {
+      variables: {
+        sourceUserId: currentUserId,
+        targetUserId,
+      },
+    },
+  );
+
+  useEffect(() => {
+    startTransition(() => {
+      refetchRelationships();
+    });
+  }, []);
+
+  useEffect(() => {
+    isPending ? nprogress.start() : nprogress.complete();
+  }, [isPending]);
 
   const refetch = useCallback(() => {
     parentRefetch?.();
-    sourceUserRefetch?.();
-  }, [parentRefetch, sourceUserRefetch]);
+    refetchRelationships?.();
+  }, [parentRefetch, refetchRelationships]);
 
   const [createUserUserRelationship] = useMutation(
     CreateUserUserRelationship_Mutation,
@@ -210,12 +234,12 @@ const UserActions: React.FC<UserActionsProps> = ({
     sourceFollowIsActive
       ? openSourceFollowModal()
       : createUserUserRelationship({
-          variables: {
-            sourceUserId,
-            targetUserId,
-            type: UserUserRelationshipTypesEnum.Follow,
-          },
-        });
+        variables: {
+          sourceUserId,
+          targetUserId,
+          type: UserUserRelationshipTypesEnum.Follow,
+        },
+      });
 
   if (sourceUserId === targetUserId) {
     return (
@@ -231,94 +255,94 @@ const UserActions: React.FC<UserActionsProps> = ({
         <Group gap="xs">
           {((targetFollowIsActive && !targetFollowIsIgnored) ||
             targetFollowIsApproved) && (
-            <Menu
-              opened={targetFollowApproveMenuIsOpen}
-              onChange={setTargetFollowApproveMenuIsOpen}
-              withArrow
-              shadow="xs"
-              disabled={targetFollowIsApproved}
-              trigger="hover"
-              openDelay={0}
-              closeDelay={400}
-              radius="md"
-              classNames={{ dropdown: classes.followApproveMenuDropdown }}
-            >
-              <Tooltip
-                label={
-                  targetFollowIsActive
-                    ? targetFollowIsApproved
-                      ? "Unapprove follower"
-                      : "Approve or ignore follow request"
-                    : "Unapprove follower (they no longer follow you)"
-                }
+              <Menu
+                opened={targetFollowApproveMenuIsOpen}
+                onChange={setTargetFollowApproveMenuIsOpen}
+                withArrow
+                shadow="xs"
+                disabled={targetFollowIsApproved}
+                trigger="hover"
+                openDelay={0}
+                closeDelay={400}
+                radius="md"
+                classNames={{ dropdown: classes.followApproveMenuDropdown }}
               >
-                <Menu.Target>
-                  <ActionIcon
-                    radius="md"
-                    variant={
-                      targetFollowIsActive && targetFollowIsApproved
-                        ? "filled"
-                        : "light"
-                    }
-                    color="green"
-                    size="lg"
-                    onClick={
-                      targetFollowIsApproved
-                        ? openTargetFollowModal
-                        : () =>
+                <Tooltip
+                  label={
+                    targetFollowIsActive
+                      ? targetFollowIsApproved
+                        ? "Unapprove follower"
+                        : "Approve or ignore follow request"
+                      : "Unapprove follower (they no longer follow you)"
+                  }
+                >
+                  <Menu.Target>
+                    <ActionIcon
+                      radius="md"
+                      variant={
+                        targetFollowIsActive && targetFollowIsApproved
+                          ? "filled"
+                          : "light"
+                      }
+                      color="green"
+                      size="lg"
+                      onClick={
+                        targetFollowIsApproved
+                          ? openTargetFollowModal
+                          : () =>
                             setTargetFollowApproveMenuIsOpen(
                               !targetFollowApproveMenuIsOpen,
                             )
-                    }
-                  >
-                    {targetFollowIsActive ? (
-                      targetFollowIsApproved ? (
-                        <IconUsers />
+                      }
+                    >
+                      {targetFollowIsActive ? (
+                        targetFollowIsApproved ? (
+                          <IconUsers />
+                        ) : (
+                          <IconUserQuestion />
+                        )
                       ) : (
-                        <IconUserQuestion />
-                      )
-                    ) : (
-                      <IconUserX />
-                    )}
-                  </ActionIcon>
-                </Menu.Target>
-              </Tooltip>
-              <Menu.Dropdown p={0}>
-                <Button.Group>
-                  <Button
-                    radius="md"
-                    variant="default"
-                    leftSection={<IconX color="red" />}
-                    onClick={() => {
-                      createUserUserRelationshipState({
-                        variables: {
-                          relationshipId: relationships?.target?.FOLLOW?.id,
-                          type: UserUserRelationshipStateTypesEnum.IsIgnored,
-                        },
-                      });
-                    }}
-                  >
-                    Ignore
-                  </Button>
-                  <Button
-                    radius="md"
-                    variant="default"
-                    leftSection={<IconCheck color="green" />}
-                    onClick={() => {
-                      createUserUserRelationshipState({
-                        variables: {
-                          relationshipId: relationships?.target?.FOLLOW?.id,
-                          type: UserUserRelationshipStateTypesEnum.IsApproved,
-                        },
-                      });
-                    }}
-                  >
-                    Approve
-                  </Button>
-                </Button.Group>
-              </Menu.Dropdown>
-            </Menu>
-          )}
+                        <IconUserX />
+                      )}
+                    </ActionIcon>
+                  </Menu.Target>
+                </Tooltip>
+                <Menu.Dropdown p={0}>
+                  <Button.Group>
+                    <Button
+                      radius="md"
+                      variant="default"
+                      leftSection={<IconX color="red" />}
+                      onClick={() => {
+                        createUserUserRelationshipState({
+                          variables: {
+                            relationshipId: relationships?.target?.FOLLOW?.id,
+                            type: UserUserRelationshipStateTypesEnum.IsIgnored,
+                          },
+                        });
+                      }}
+                    >
+                      Ignore
+                    </Button>
+                    <Button
+                      radius="md"
+                      variant="default"
+                      leftSection={<IconCheck color="green" />}
+                      onClick={() => {
+                        createUserUserRelationshipState({
+                          variables: {
+                            relationshipId: relationships?.target?.FOLLOW?.id,
+                            type: UserUserRelationshipStateTypesEnum.IsApproved,
+                          },
+                        });
+                      }}
+                    >
+                      Approve
+                    </Button>
+                  </Button.Group>
+                </Menu.Dropdown>
+              </Menu>
+            )}
 
           <Tooltip
             label={
@@ -448,18 +472,18 @@ const UserActions: React.FC<UserActionsProps> = ({
         action={() => {
           blockIsActive
             ? deleteUserUserRelationshipState({
-                variables: {
-                  relationshipStateId:
-                    relationships?.source?.BLOCK?.IS_ACTIVE?.id,
-                },
-              })
+              variables: {
+                relationshipStateId:
+                  relationships?.source?.BLOCK?.IS_ACTIVE?.id,
+              },
+            })
             : createUserUserRelationship({
-                variables: {
-                  sourceUserId,
-                  targetUserId,
-                  type: UserUserRelationshipTypesEnum.Block,
-                },
-              });
+              variables: {
+                sourceUserId,
+                targetUserId,
+                type: UserUserRelationshipTypesEnum.Block,
+              },
+            });
         }}
       />
     </>

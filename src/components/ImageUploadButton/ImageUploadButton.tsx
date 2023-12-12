@@ -12,22 +12,21 @@ import { useId } from "@mantine/hooks";
 import Uppy from "@uppy/core";
 import Dashboard from "@uppy/dashboard";
 import ImageEditor from "@uppy/image-editor";
+import Webcam from "@uppy/webcam";
 import Transloadit from "@uppy/transloadit";
 import Tus from "@uppy/tus";
 import { useMutation } from "@apollo/client";
 import { useSession } from "next-auth/react";
-import { notifications } from "@mantine/notifications";
+
+import { createImagesFromUrls } from "@/utils";
+
+import { CreateImages_Mutation } from "./ImageUploadButton.graphql";
+import classes from "./ImageUploadButton.module.css";
 
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
 import "@uppy/image-editor/dist/style.min.css";
 import "@uppy/webcam/dist/style.min.css";
-import "@uppy/screen-capture/dist/style.min.css";
-import "@uppy/audio/dist/style.min.css";
-
-import { CreateImage_Mutation } from "./ImageUploadButton.graphql";
-import classes from "./ImageUploadButton.module.css";
-import { getImageMetadata } from "@/utils";
 
 interface ImageUploadButtonProps {
   url: string;
@@ -57,7 +56,7 @@ const ImageUploadButton = forwardRef<HTMLDivElement, ImageUploadButtonProps>(
     const [uppy, setUppy] = useState<Uppy | undefined>();
     const colorScheme = useComputedColorScheme("light");
 
-    const [createImage] = useMutation(CreateImage_Mutation);
+    const [createImages] = useMutation(CreateImages_Mutation);
 
     useEffect(() => {
       if (uppy) {
@@ -71,48 +70,60 @@ const ImageUploadButton = forwardRef<HTMLDivElement, ImageUploadButtonProps>(
           // 10 MB
           maxFileSize: 10485760,
         },
-        onBeforeFileAdded: () => true,
       })
         .use(Dashboard, {
           trigger: `#${uploaderModalTriggerId}`,
           closeModalOnClickOutside: true,
           theme: colorScheme,
           proudlyDisplayPoweredByUppy: false,
-          autoOpenFileEditor: true,
+          autoOpenFileEditor: false,
+          closeAfterFinish: true,
+          metaFields: [
+            {
+              id: "name",
+              name: "Name",
+              placeholder: "file name (defaults to original file name)",
+            },
+            {
+              id: "description",
+              name: "description",
+              placeholder:
+                "description to show (defaults to file name or original file name)",
+            },
+          ],
+          locale: {
+            strings: {
+              dropPasteImportFiles: "Drag-and-drop files here or import from:",
+            },
+          },
+        })
+        .use(Webcam, {
+          target: Dashboard,
+          preferredVideoMimeType: "video/av1",
+          preferredImageMimeType: "image/avif",
+          modes: ["picture"],
         })
         .use(ImageEditor, { target: Dashboard });
 
       if (process.env.NODE_ENV === "development") {
         newUppy
-          .use(Tus, { endpoint: process.env.NEXT_PUBLIC_CLIENT_TUS_URL })
-          .on("complete", async ({ successful: [{ uploadURL, name }] }) => {
-            if (!uploadURL) {
-              notifications.show({
-                title: "Upload Error!",
-                message:
-                  "Something went wrong with your upload. Please wait a few moments and try again",
-                color: "red",
-              });
-            } else {
-              const { naturalHeight: height, naturalWidth: width } =
-                await getImageMetadata(uploadURL);
+          .use(Tus, {
+            endpoint: process.env.NEXT_PUBLIC_CLIENT_TUS_URL,
+            removeFingerprintOnSuccess: true,
+          })
+          .on("complete", async ({ successful }) => {
+            const images = successful?.map(
+              ({ uploadURL, name, meta: { description } }) => ({
+                url: uploadURL,
+                name,
+                description:
+                  ((description as string) ?? "").length > 0
+                    ? (description as string)
+                    : name,
+              }),
+            );
 
-              const {
-                data: {
-                  insertImagesOne: { id: profileImageId },
-                },
-              } = await createImage({
-                variables: {
-                  uploaderId: userId,
-                  url: uploadURL,
-                  altText: name,
-                  width,
-                  height,
-                },
-              });
-
-              handleSelect(profileImageId, uploadURL, name);
-            }
+            createImagesFromUrls(userId, createImages, handleSelect, images);
           });
       } else {
         newUppy
@@ -127,28 +138,16 @@ const ImageUploadButton = forwardRef<HTMLDivElement, ImageUploadButtonProps>(
             },
             waitForEncoding: true,
           })
-          .on("transloadit:complete", async ({ results }) => {
-            const uploadUrl = results?.finished[0]?.ssl_url;
-            const uploadName = results?.finished[0]?.original_name;
+          .on("transloadit:complete", async ({ results: { finished } }) => {
+            const images = finished?.map(
+              ({ ssl_url, meta: { name, description } }) => ({
+                url: ssl_url,
+                name,
+                description: description ?? name,
+              }),
+            );
 
-            const { naturalHeight: height, naturalWidth: width } =
-              await getImageMetadata(uploadUrl);
-
-            const {
-              data: {
-                insertImagesOne: { id: profileImageId },
-              },
-            } = await createImage({
-              variables: {
-                uploaderId: userId,
-                url: uploadUrl,
-                altText: uploadName,
-                width,
-                height,
-              },
-            });
-
-            handleSelect(profileImageId, uploadUrl, uploadName);
+            createImagesFromUrls(userId, createImages, handleSelect, images);
           });
       }
 

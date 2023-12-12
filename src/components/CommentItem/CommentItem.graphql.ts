@@ -16,7 +16,7 @@ const CommentItem_CommentFragment = graphql(`
     }
     author {
       id
-      name
+      ...UserSummary_UserFragment
     }
     subjectComments(orderBy: { createdAt: ASC }) {
       id
