@@ -7,12 +7,6 @@ html {
 }
 
 /* ===== Scrollbar CSS ===== */
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #7f7f7f none;
-}
-
 /* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
   width: 2px;

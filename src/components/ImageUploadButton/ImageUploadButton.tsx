@@ -18,7 +18,7 @@ import Tus from "@uppy/tus";
 import { useMutation } from "@apollo/client";
 import { useSession } from "next-auth/react";
 
-import { createImagesFromUrls } from "@/utils";
+import { createImagesFromUrls, getBasename } from "@/utils";
 
 import { CreateImages_Mutation } from "./ImageUploadButton.graphql";
 import classes from "./ImageUploadButton.module.css";
@@ -120,7 +120,10 @@ const ImageUploadButton = forwardRef<HTMLDivElement, ImageUploadButtonProps>(
               }) => ({
                 url: uploadURL,
                 name: name || originalName,
-                description: (description as string) || name,
+                description:
+                  (description as string) ||
+                  getBasename(name) ||
+                  getBasename(originalName),
               }),
             );
 
@@ -145,7 +148,10 @@ const ImageUploadButton = forwardRef<HTMLDivElement, ImageUploadButtonProps>(
               ({ ssl_url, original_name, meta: { name, description } }) => ({
                 url: ssl_url,
                 name: name || original_name,
-                description: description || name || original_name,
+                description:
+                  description ||
+                  getBasename(name) ||
+                  getBasename(original_name),
               }),
             );
 

@@ -190,7 +190,7 @@ const PostCard: React.FC<PostCardProps> = ({ postId, refetch = () => {} }) => {
                 )}
                 alt={firstImage?.description ?? ""}
                 h="auto"
-                mah={cardWidth}
+                mah={`calc(${cardWidth}px + 2*var(--mantine-spacing-lg))`}
                 fit="contain"
                 component={NextImage}
                 width={firstImage?.width}
