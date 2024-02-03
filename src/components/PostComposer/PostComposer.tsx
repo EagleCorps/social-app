@@ -72,7 +72,7 @@ const PostComposer: React.FC<PostComposerProps> = () => {
           insertPostsOne: { id: postId },
         },
       } = await createPost({
-        variables: { body: postBody },
+        variables: { authorId: userId, body: postBody },
         onCompleted: !postImageId ? () => router.push("/posts") : () => {},
       });
       if (postImageId) {
