@@ -11,7 +11,7 @@ const AppTitle: React.FC<AppTitleProps> = ({ title }) => {
 
   return (
     <Center>
-      <Title>{appTitle}</Title>
+      <Title order={5}>{appTitle}</Title>
     </Center>
   );
 };
