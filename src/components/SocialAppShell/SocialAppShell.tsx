@@ -108,7 +108,7 @@ const SocialAppShell: React.FC<AppShellProps> = ({ children }) => {
       <AppHeader
         {...{
           navigationPanelIsOpen,
-          settingsPanelIsOpen: !settingsPanelIsOpen,
+          settingsPanelIsOpen,
           toggleNavigationPanelIsOpen,
           toggleSettingsPanelIsOpen,
           pageTitle,
