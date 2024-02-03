@@ -47,6 +47,7 @@ import {
   CreateRootComment_Mutation,
 } from "./PostCard.graphql";
 import classes from "./PostCard.module.css";
+import { getRelativeTime } from "@/utils";
 
 interface PostCardProps {
   postId: string;
@@ -157,8 +158,8 @@ const PostCard: React.FC<PostCardProps> = ({ postId, refetch = () => {} }) => {
     const updatedAtDateTime = dayjs(updatedAt);
 
     return updatedAtDateTime > createdAtDateTime
-      ? `updated ${updatedAtDateTime.toISOString()}`
-      : createdAtDateTime.toISOString();
+      ? `updated ${getRelativeTime(updatedAtDateTime)}`
+      : getRelativeTime(createdAtDateTime);
   }, [createdAt, updatedAt]);
 
   return (
