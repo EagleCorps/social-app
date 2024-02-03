@@ -9,8 +9,8 @@ const PostComposer_PostFragment = graphql(`
 `);
 
 const CreatePost_Mutation = graphql(`
-  mutation CreatePost_Mutation($body: String!, $authorId: uuid!) {
-    insertPostsOne(object: { body: $body, authorId: $authorId }) {
+  mutation CreatePost_Mutation($body: String!) {
+    insertPostsOne(object: { body: $body }) {
       id
       ...PostComposer_PostFragment
     }
