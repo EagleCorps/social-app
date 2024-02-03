@@ -70,6 +70,7 @@ const NameSettingsSection: React.FC<NameSettingsSectionProps> = ({
         updateUserName({
           variables: {
             userId,
+            name: userName,
           },
         });
       }
@@ -82,13 +83,17 @@ const NameSettingsSection: React.FC<NameSettingsSectionProps> = ({
       <Stack>
         <Group justify="space-between">
           <Title order={3}>Name</Title>
-          <ActionIcon variant="subtle" size="sm">
+          <ActionIcon variant="subtle" size="sm" type="submit">
             <IconCheck />
           </ActionIcon>
         </Group>
         <Space />
 
-        <TextInput radius="md" placeholder="Your name here..." />
+        <TextInput
+          radius="md"
+          placeholder="Your name here..."
+          {...form.getInputProps("userName")}
+        />
       </Stack>
     </form>
   ) : (
