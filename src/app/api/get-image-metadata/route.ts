@@ -9,12 +9,10 @@ const getImageMetadata = async (url: string) => {
   );
   const imageArrayBuffer = await imageSource.arrayBuffer();
 
-  const imageBuffer = Buffer.from(imageArrayBuffer);
-
   const {
     metadata: { height, width },
     base64: blurDataUrl,
-  } = await getPlaiceholder(imageBuffer, { size: 10 });
+  } = await getPlaiceholder(imageArrayBuffer, { size: 10 });
 
   return {
     width,
