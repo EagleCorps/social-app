@@ -28,7 +28,7 @@ const AppHeader = forwardRef<HTMLDivElement, AppHeaderProps>(
     ref,
   ) => (
     <AppShell.Header classNames={{ header: classes.header }} ref={ref}>
-      <Flex align="center" h="100%">
+      <Flex justify="space-between" align="center" h="100%">
         <ActionIcon
           onClick={toggleNavigationPanelIsOpen}
           variant="subtle"
