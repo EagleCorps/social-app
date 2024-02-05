@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:18-alpine AS build
 
 RUN apk add --no-cache curl
 
@@ -8,6 +8,10 @@ COPY package.json .
 COPY package-lock.json .
 
 RUN npm ci
+
+FROM build
+
+WORKDIR /app
 
 COPY . .
 

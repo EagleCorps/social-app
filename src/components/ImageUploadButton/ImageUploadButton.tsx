@@ -149,9 +149,9 @@ const ImageUploadButton = forwardRef<HTMLDivElement, ImageUploadButtonProps>(
                 url: ssl_url,
                 name: name || original_name,
                 description:
-                  description ||
-                  getBasename(name) ||
-                  getBasename(original_name),
+                  description || name
+                    ? getBasename(name)
+                    : getBasename(original_name),
               }),
             );
 

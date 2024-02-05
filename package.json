@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "concurrently --names \"NEXT,GRAPHQL\" --restart-tries -1 --restart-after 5 \"next dev\" \"until curl -s -w '%{onerror}graphql-engine is not yet healthy; retrying...\n' -f -o /dev/null http://graphql-engine:8080/healthz; do sleep 3; done && nodemon --watch /app/src --exec npm run graphql:generate --watch src/**/*.graphql.ts\"",
+    "dev": "concurrently -k --names \"NEXT,GRAPHQL\" --restart-tries -1 --restart-after 5 \"next dev\" \"until curl -s -w '%{onerror}graphql-engine is not yet healthy; retrying...\n' -f -o /dev/null http://graphql-engine:8080/healthz; do sleep 5; done && npm run graphql:generate --watch './src/**.*.graphql.ts'\"",
     "graphql:generate": "graphql-codegen",
     "build": "next build",
     "analyze": "ANALYZE=true next build",
