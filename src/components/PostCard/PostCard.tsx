@@ -29,6 +29,7 @@ import { IconCheck, IconReceiptRefund, IconX } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import NextImage from "next/image";
 import dayjs from "dayjs";
+import { nprogress } from "@mantine/nprogress";
 
 import {
   ConfirmationModal,
@@ -47,7 +48,6 @@ import {
 } from "./PostCard.graphql";
 import classes from "./PostCard.module.css";
 import { getRelativeTime } from "@/utils";
-import { nprogress } from "@mantine/nprogress";
 
 interface PostCardProps {
   postId: string;
@@ -207,7 +207,7 @@ const PostCard: React.FC<PostCardProps> = ({ postId, refetch = () => {} }) => {
         <Space h={firstImage ? "md" : 0} />
         <Group justify="space-between">
           <UserSummary userId={authorId} />
-          <Group>
+          <Group gap="xs">
             <Tooltip label={updatedAt}>
               <Text size="xs" c="dimmed">
                 {timeText}
@@ -225,7 +225,7 @@ const PostCard: React.FC<PostCardProps> = ({ postId, refetch = () => {} }) => {
                 </ActionIcon>
               </Tooltip>
             ) : (
-              <></>
+              <Space />
             )}
           </Group>
         </Group>
@@ -278,15 +278,20 @@ const PostCard: React.FC<PostCardProps> = ({ postId, refetch = () => {} }) => {
 
         {comments?.length > 0 && (
           <ScrollArea.Autosize mah={400}>
-            <Timeline active={comments.length + 1} lineWidth={1} bulletSize={8}>
+            <Timeline
+              active={comments.length + 1}
+              lineWidth={1}
+              bulletSize={8}
+              classNames={{ root: classes.timelineRoot }}
+            >
               {comments
                 ?.filter(({ id }) => !!id)
                 ?.map(({ id }) => (
                   <Timeline.Item
                     key={id}
                     classNames={{
-                      itemBullet: classes.itemBullet,
                       item: classes.item,
+                      itemBullet: classes.itemBullet,
                     }}
                   >
                     <Suspense fallback={<Loader />}>

@@ -4,16 +4,23 @@
   }
 }
 
-.itemBulletInner {
-  margin-top: var(--mantine-spacing-md);
+.timelineRoot :nth-last-child(2) {
+  &:before {
+    margin-bottom: 4.25rem;
+  }
 }
 
 .itemInner {
   margin-top: 0;
   &:before {
     bottom: calc(var(--mantine-spacing-xl) * -1 - var(--mantine-spacing-md));
-    margin-bottom: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 0rem;
   }
+}
+
+.itemBulletInner {
+  margin-top: var(--mantine-spacing-md);
 }
 
 .phantomCommentTimelineItemBullet {

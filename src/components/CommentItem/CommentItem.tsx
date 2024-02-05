@@ -9,8 +9,6 @@ import {
   Group,
   Indicator,
   Loader,
-  Menu,
-  ScrollArea,
   Space,
   Stack,
   Text,
@@ -22,7 +20,6 @@ import {
   IconCheck,
   IconMessageMinus,
   IconMessagePlus,
-  IconMoodSmile,
   IconMoodUp,
   IconReceiptRefund,
   IconX,
@@ -210,15 +207,19 @@ const CommentItem: React.FC<CommentItemProps> = ({ commentId }) => {
 
           <Tooltip label={replyIsOpen ? "Close reactions" : "Open reations"}>
             <ActionIcon
-              variant="subtle"
+              variant={reactionsAreExpanded ? "light" : "subtle"}
               color={reactionsAreExpanded ? "blue" : "gray"}
               size="lg-padded"
               onClick={() => setReactionsAreExpanded(!reactionsAreExpanded)}
               ref={openReactionsButtonRef}
             >
-              <Indicator label={commentReactions.length} size={12}>
-                {reactionsAreExpanded ? <IconMoodUp /> : <IconMoodUp />}
-              </Indicator>
+              {commentReactions.length > 0 ? (
+                <Indicator label={commentReactions.length} size={12}>
+                  <IconMoodUp size="md" />
+                </Indicator>
+              ) : (
+                <IconMoodUp size="md" />
+              )}
             </ActionIcon>
           </Tooltip>
 
@@ -233,7 +234,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ commentId }) => {
           >
             <ActionIcon
               disabled={isArchived}
-              variant="subtle"
+              variant={replyIsOpen ? "light" : "subtle"}
               color={replyIsOpen ? "blue" : "gray"}
               size="lg-padded"
               onClick={() => setReplyIsOpen(!replyIsOpen)}
@@ -265,6 +266,9 @@ const CommentItem: React.FC<CommentItemProps> = ({ commentId }) => {
           active={(subjectComments?.length ?? 0) + 1}
           lineWidth={1}
           bulletSize={8}
+          classNames={{
+            root: classes.timelineRoot,
+          }}
         >
           {replyIsOpen && (
             <Timeline.Item
@@ -335,8 +339,8 @@ const CommentItem: React.FC<CommentItemProps> = ({ commentId }) => {
           {commentIsLoading && (
             <Timeline.Item
               classNames={{
-                itemBullet: classes.itemBulletInner,
                 item: classes.itemInner,
+                itemBullet: classes.itemBulletInner,
               }}
             >
               <Loader size="sm" />

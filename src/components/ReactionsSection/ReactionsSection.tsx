@@ -170,7 +170,7 @@ const ReactionsSection: React.FC<ReactionsSectionProps> = ({
         {Object.keys(reactionsAggregate).length > 0 && (
           <Flex gap="xs" wrap="nowrap">
             {Object.keys(reactionsAggregate).map((emoji) => (
-              <Tooltip key={emoji} label={"hi"}>
+              <Tooltip key={emoji}>
                 <Chip
                   variant="light"
                   disabled={disabled}
