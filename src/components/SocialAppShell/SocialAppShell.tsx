@@ -1,14 +1,8 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
-import {
-  AppShell,
-  Container,
-  Loader,
-  Skeleton,
-  useMantineTheme,
-} from "@mantine/core";
-import { useDisclosure, useElementSize, useMediaQuery } from "@mantine/hooks";
+import { Suspense } from "react";
+import { AppShell, Container, Loader, Skeleton } from "@mantine/core";
+import { useDisclosure, useElementSize } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
 import { useBackgroundQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 
@@ -26,53 +20,6 @@ const SocialAppShell: React.FC<AppShellProps> = ({ children }) => {
   const [settingsPanelIsOpen, { toggle: toggleSettingsPanelIsOpen }] =
     useDisclosure(true);
   const { ref: appHeaderRef, height: appHeaderHeight } = useElementSize();
-
-  const theme = useMantineTheme();
-
-  const screenIsMaxSm = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
-  const screenIsMaxMd = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
-
-  useEffect(() => {
-    if (screenIsMaxSm) {
-      if (settingsPanelIsOpen) {
-        toggleSettingsPanelIsOpen();
-      }
-
-      if (navigationPanelIsOpen) {
-        toggleNavigationPanelIsOpen();
-      }
-    } else if (!navigationPanelIsOpen) {
-      toggleNavigationPanelIsOpen();
-    }
-  }, [screenIsMaxSm]);
-
-  useEffect(() => {
-    if (screenIsMaxMd) {
-      if (navigationPanelIsOpen && settingsPanelIsOpen) {
-        toggleSettingsPanelIsOpen();
-      }
-    } else {
-      if (!settingsPanelIsOpen) {
-        toggleSettingsPanelIsOpen();
-      }
-
-      if (!navigationPanelIsOpen) {
-        toggleNavigationPanelIsOpen();
-      }
-    }
-  }, [screenIsMaxMd]);
-
-  useEffect(() => {
-    if (screenIsMaxMd && navigationPanelIsOpen && settingsPanelIsOpen) {
-      toggleSettingsPanelIsOpen();
-    }
-  }, [navigationPanelIsOpen]);
-
-  useEffect(() => {
-    if (screenIsMaxMd && settingsPanelIsOpen && navigationPanelIsOpen) {
-      toggleNavigationPanelIsOpen();
-    }
-  }, [settingsPanelIsOpen]);
 
   const {
     data: {
