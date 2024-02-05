@@ -31,11 +31,8 @@ const usePageTitle = () => {
     (userName
       ? `${userName}'s Profile`
       : pathName
-          .replace(
-            /[-|/]([a-z])/g,
-            (_match, letter) => ` ${letter.toUpperCase()}`,
-          )
-          .trim())
+        .replace(/\d/g, (_match, letter) => ` ${letter.toUpperCase()}`)
+        .trim())
   );
 };
 
