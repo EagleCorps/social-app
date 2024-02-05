@@ -1,7 +1,8 @@
+import { useMemo } from "react";
 import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 import { useParams, usePathname } from "next/navigation";
+
 import { UsePageTitle_Query } from "./usePageTitle.graphql";
-import { useMemo } from "react";
 
 const usePageTitle = () => {
   const pathName = usePathname();
