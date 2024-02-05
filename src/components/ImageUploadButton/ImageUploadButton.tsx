@@ -47,22 +47,30 @@ const ImageUploadButton = forwardRef<HTMLDivElement, ImageUploadButtonProps>(
     },
     ref,
   ) => {
+    // Get current user's ID.
     const {
       data: {
         user: { id: userId },
       },
     } = useSession();
+    // Get ID for upload button from parent component.
     const uploaderModalTriggerId = useId(buttonId);
+    // Keep Uppy instance in this component's state.
     const [uppy, setUppy] = useState<Uppy | undefined>();
+    // Get current app color scheme to pass to Uppy.
     const colorScheme = useComputedColorScheme("light");
 
+    // Generate function for creating images in DB.
     const [createImages] = useMutation(CreateImages_Mutation);
 
+    // Initialize Uppy on component mount.
     useEffect(() => {
       if (uppy) {
         uppy.close({ reason: "unmount" });
       }
 
+      // Universal Uppy confugration pieces (independent of local or deployed
+      // environment).
       const newUppy = new Uppy({
         restrictions: {
           allowedFileTypes: ["image/*"],
@@ -105,6 +113,7 @@ const ImageUploadButton = forwardRef<HTMLDivElement, ImageUploadButtonProps>(
         })
         .use(ImageEditor, { target: Dashboard });
 
+      // Local-only Uppy setup with local Tus instance.
       if (process.env.NODE_ENV === "development") {
         newUppy
           .use(Tus, {
@@ -129,6 +138,7 @@ const ImageUploadButton = forwardRef<HTMLDivElement, ImageUploadButtonProps>(
 
             createImagesFromUrls(userId, createImages, handleSelect, images);
           });
+        // Deployed Uppy setup with Transloadit (hosted Tus).
       } else {
         newUppy
           .use(Transloadit, {
@@ -162,6 +172,7 @@ const ImageUploadButton = forwardRef<HTMLDivElement, ImageUploadButtonProps>(
       setUppy(newUppy);
     }, [uploaderModalTriggerId, colorScheme]);
 
+    // Render image upload button, with currently-selected image as background.
     return (
       <Paper
         ref={ref}
