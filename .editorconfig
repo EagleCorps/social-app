@@ -2,3 +2,6 @@ root = true
 
 [*]
 max_line_width = 80
+indent_style = space
+indent_size = 2
+tab_width = 2

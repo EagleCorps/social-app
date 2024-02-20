@@ -63,6 +63,8 @@ Run the following commands to get started.
         https://authjs.dev/reference/core/providers/google#notes
    1. Add those as the values for `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`,
       respectively
+1. Install and run [`docker`](https://docs.docker.com/get-docker/).
+   - If you're on Linux, install via your package manager.
 
 ### Optional
 
@@ -77,6 +79,7 @@ Run the following commands to get started.
 
 ## Development
 
+- Ensure docker is running
 - Build and start the project with `./scripts/build`
 - Stop the project with `./scripts/stop`
 - When new packages are installed (with `npm i <package name>`), be sure to run
