@@ -38,7 +38,7 @@ exceptions depending on your OS.
 - `grep`
 - `sed`
   - MacOS users must install `gnu-sed` (`homebrew` is recommended to install
-    it)
+    it: `brew install gnu-sed`)
   - If you do not have admin privileges, you can install `homebrew` manually to
     a directory to which you have access and add that (and its `bin` folder) to
     your path
@@ -63,8 +63,8 @@ Run the following commands to get started.
         https://authjs.dev/reference/core/providers/google#notes
    1. Add those as the values for `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`,
       respectively
-1. Install and run [`docker`](https://docs.docker.com/get-docker/).
-   - If you're on Linux, install via your package manager.
+1. Install and run [`docker`](https://docs.docker.com/get-docker/)
+   - If you're on Linux, install via your package manager
 
 ### Optional
 
@@ -81,6 +81,10 @@ Run the following commands to get started.
 
 - Ensure docker is running
 - Build and start the project with `./scripts/build`
+  - The first time, this will take about 10 minutes; subsequent runs should be
+    much faster
+  - Navigate to http://localhost:3000 to use the app
+    - The page will take about a minute to load the first time
 - Stop the project with `./scripts/stop`
 - When new packages are installed (with `npm i <package name>`), be sure to run
   `./scripts/rebuild`
