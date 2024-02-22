@@ -39,23 +39,23 @@ interface ReactionsSectionProps {
   disabled?: boolean;
   size?: MantineSize;
   addReaction:
-    | MutationFunction<
-        AddPostReaction_MutationMutation,
-        AddPostReaction_MutationMutationVariables
-      >
-    | MutationFunction<
-        AddCommentReaction_MutationMutation,
-        AddCommentReaction_MutationMutationVariables
-      >;
+  | MutationFunction<
+    AddPostReaction_MutationMutation,
+    AddPostReaction_MutationMutationVariables
+  >
+  | MutationFunction<
+    AddCommentReaction_MutationMutation,
+    AddCommentReaction_MutationMutationVariables
+  >;
   deleteReaction:
-    | MutationFunction<
-        DeletePostReaction_MutationMutation,
-        DeletePostReaction_MutationMutationVariables
-      >
-    | MutationFunction<
-        DeleteCommentReaction_MutationMutation,
-        DeleteCommentReaction_MutationMutationVariables
-      >;
+  | MutationFunction<
+    DeletePostReaction_MutationMutation,
+    DeletePostReaction_MutationMutationVariables
+  >
+  | MutationFunction<
+    DeleteCommentReaction_MutationMutation,
+    DeleteCommentReaction_MutationMutationVariables
+  >;
 }
 
 const ReactionsSection: React.FC<ReactionsSectionProps> = ({
@@ -170,7 +170,7 @@ const ReactionsSection: React.FC<ReactionsSectionProps> = ({
         {Object.keys(reactionsAggregate).length > 0 && (
           <Flex gap="xs" wrap="nowrap">
             {Object.keys(reactionsAggregate).map((emoji) => (
-              <Tooltip key={emoji}>
+              <Tooltip label="react" key={emoji}>
                 <Chip
                   variant="light"
                   disabled={disabled}
