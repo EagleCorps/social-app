@@ -18,6 +18,7 @@ const {
 } = NextAuth({
   adapter: PostgresAdapter(pool),
   providers: [Google],
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     session: async ({ session, user: { id } }) => ({
       ...session,
