@@ -7,8 +7,6 @@ WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
 
-RUN apk add vips
-RUN npm install --include=optional --os=linux --libc=musl --cpu=x64 sharp@latest
 RUN npm ci
 
 FROM build

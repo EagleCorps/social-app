@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "concurrently -k --names \"NEXT,GRAPHQL\" --restart-tries -10 --restart-after 5 \"next dev\" \"until curl -s -w '%{onerror}graphql-engine is not yet healthy; retrying...\n' -f -o /dev/null http://graphql-engine:8080/healthz; do sleep 5; done && npm run graphql:generate --watch './src/**.*.graphql.ts'\"",
-    "dev-tmp": "next dev",
     "graphql:generate": "graphql-codegen",
     "build": "next build",
     "analyze": "ANALYZE=true next build",
@@ -37,7 +36,6 @@
     "@mantine/notifications": "^7.3.0",
     "@mantine/nprogress": "^7.3.0",
     "@next/bundle-analyzer": "^13.5.4",
-    "@plaiceholder/next": "^3.0.0",
     "@tabler/icons-react": "^2.39.0",
     "@uppy/compressor": "^1.0.5",
     "@uppy/core": "^3.5.1",
@@ -58,8 +56,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^9.0.0",
-    "remark-gfm": "^4.0.0",
-    "sharp": "^0.33.2"
+    "remark-gfm": "^4.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",

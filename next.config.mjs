@@ -1,5 +1,4 @@
 // @ts-ignore
-import withPlaiceholder from "@plaiceholder/next";
 import withBundleAnalyzerConstructor from "@next/bundle-analyzer";
 
 const withBundleAnalyzer = withBundleAnalyzerConstructor({
@@ -15,9 +14,8 @@ const getRemotePattern = (url) => {
     : uriSplitColon?.[0]?.split?.("/");
   const hostname = hasPort ? uriSplitColon?.[0] : hostAndPortAndPath?.[0] ?? "";
   const port = hasPort ? hostAndPortAndPath?.[0] : "";
-  const pathname = `/${
-    (hasPort ? hostAndPortAndPath?.[1] : hostAndPortAndPath?.[1]) ?? ""
-  }/**`;
+  const pathname = `/${(hasPort ? hostAndPortAndPath?.[1] : hostAndPortAndPath?.[1]) ?? ""
+    }/**`;
 
   return {
     protocol: protocol ?? "https",
@@ -34,26 +32,24 @@ const remotePatterns = [
   .filter(Boolean)
   .map(getRemotePattern);
 
-const config = withBundleAnalyzer(
-  withPlaiceholder({
-    reactStrictMode: false,
-    eslint: {
-      ignoreDuringBuilds: true,
-    },
-    experimental: {
-      optimizePackageImports: [
-        "@mantine/core",
-        "@mantine/hooks",
-        "highlight.js",
-        "cropperjs",
-        "@tabler/icons",
-        "@tabler/icons-react",
-      ],
-    },
-    images: {
-      remotePatterns,
-    },
-  }),
-);
+const config = withBundleAnalyzer({
+  reactStrictMode: false,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  experimental: {
+    optimizePackageImports: [
+      "@mantine/core",
+      "@mantine/hooks",
+      "highlight.js",
+      "cropperjs",
+      "@tabler/icons",
+      "@tabler/icons-react",
+    ],
+  },
+  images: {
+    remotePatterns,
+  },
+});
 
 export default config;
