@@ -17,7 +17,7 @@ const {
   auth,
 } = NextAuth({
   adapter: PostgresAdapter(pool),
-  providers: [Google],
+  providers: [Google({ allowDangerousEmailAccountLinking: true })],
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     session: async ({ session, user: { id } }) => ({
